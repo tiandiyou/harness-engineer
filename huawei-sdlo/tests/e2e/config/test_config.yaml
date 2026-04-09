@@ -1,0 +1,189 @@
+# E2E测试配置
+
+# 测试环境配置
+test_environment:
+  # 测试服务器
+  base_url: "http://localhost:8080"
+  api_url: "http://localhost:8080/api/v1"
+  
+  # 数据库配置
+  database:
+    host: "localhost"
+    port: 5432
+    name: "privilege_test"
+    user: "test"
+    password: "test"
+    
+  # LDAP配置
+  ldap:
+    host: "localhost"
+    port: 389
+    base_dn: "dc=test,dc=com"
+    
+# 测试配置
+test_config:
+  # 并行配置
+  parallel_workers: 5
+  retry_count: 2
+  retry_delay: 3
+  
+  # 超时配置
+  timeout:
+    api_call: 30
+    test_case: 300
+    whole_suite: 3600
+    
+  # 报告配置
+  report:
+    format: "html"
+    output_dir: "./reports"
+    include_screenshots: true
+    include_logs: true
+    
+  # 行为配置
+  screenshot_on_failure: true
+  video_on_failure: false
+  verbose: true
+
+# 测试数据
+test_data:
+  # 测试账号
+  accounts:
+    admin:
+      user_name: "test_admin"
+      password: "Test@123456"
+      role: "admin"
+      
+    operator:
+      user_name: "test_operator"
+      password: "Test@123456"
+      role: "operator"
+      
+    viewer:
+      user_name: "test_viewer"
+      password: "Test@123456"
+      role: "viewer"
+      
+  # 测试部门
+  departments:
+    - "IT"
+    - "Finance"
+    - "Operation"
+    - "Security"
+    
+  # 测试角色
+  roles:
+    - name: "admin"
+      permissions: ["*"]
+      
+    - name: "operator"
+      permissions:
+        - "db:read"
+        - "db:write"
+        - "app:deploy"
+        
+    - name: "viewer"
+      permissions:
+        - "db:read"
+        - "app:read"
+        
+  # 测试权限
+  permissions:
+    - "db:read"
+    - "db:write"
+    - "db:delete"
+    - "app:read"
+    - "app:write"
+    - "app:deploy"
+    - "app:admin"
+    - "config:read"
+    - "config:write"
+
+# 审批流程配置
+approval_config:
+  # 审批级别
+  levels:
+    - level: 1
+      name: "部门主管"
+      auto_approve: false
+      
+    - level: 2
+      name: "安全负责人"
+      auto_approve: false
+      
+    - level: 3
+      name: "IT总监"
+      auto_approve: false
+      
+  # 超时配置
+  timeout:
+    level_1: 86400    # 1天
+    level_2: 172800   # 2天
+    level_3: 259200   # 3天
+    
+  # 自动审批规则
+  auto_approve:
+    enabled: false
+    conditions: []
+
+# 审计配置
+audit_config:
+  # 审计级别
+  level: "detailed"
+  
+  # 日志保留
+  retention_days: 365
+  
+  # 审计内容
+  audit_events:
+    - "account_create"
+    - "account_modify"
+    - "account_delete"
+    - "permission_grant"
+    - "permission_revoke"
+    - "login"
+    - "logout"
+    - "api_call"
+    - "config_change"
+
+# 安全配置
+security_config:
+  # MFA配置
+  mfa:
+    required: true
+    methods:
+      - "totp"
+      - "sms"
+      - "email"
+      
+  # 会话配置
+  session:
+    timeout: 1800    # 30分钟
+    max_concurrent: 3
+    
+  # IP白名单
+  ip_whitelist:
+    enabled: false
+    ips: []
+
+# 多Agent配置
+agent_config:
+  coordinator:
+    model: "claude-3-opus"
+    temperature: 0.1
+    
+  architect:
+    model: "claude-3-opus"
+    temperature: 0.1
+    
+  generator:
+    model: "claude-3-sonnet"
+    temperature: 0.2
+    
+  executor:
+    model: "claude-3-haiku"
+    temperature: 0.1
+    
+  analyzer:
+    model: "claude-3-sonnet"
+    temperature: 0.1
